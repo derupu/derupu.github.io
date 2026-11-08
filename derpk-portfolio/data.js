@@ -3,6 +3,7 @@ window.SITE = {
   name: "DerpK",
   headline: "Game Playtester | QA Enthusiast | Android, iOS and PC",
   intro: "I playtest games on Android, iOS and PC. I find the bugs, confusing menus and rough edges players hit first, then write them up so developers can fix them. I also record gameplay with spoken commentary.",
+  ndaNote: "I have also tested other games under NDA that I can’t name or describe.",
   contact: {
     email: "derp_demi_angel@yahoo.com",
     discord: "derpkayouew",
