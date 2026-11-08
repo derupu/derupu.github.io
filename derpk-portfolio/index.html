@@ -101,7 +101,7 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--mut);font-siz
 <h2>Games I’ve playtested</h2>
 <p class="lead">These are projects I tested as a playtester. Games I just enjoy playing are in the Library.</p>
 <div id="filters" role="group" aria-label="Filter by platform"></div>
-<div class="grid" id="games"></div>
+<div class="grid" id="games"><p class="meta">The games could not load. Make sure data.js is in the same folder as index.html and is the latest version, then refresh with Ctrl+F5.</p></div>
 </div></section>
 
 <section id="services"><div class="wrap">
@@ -174,11 +174,13 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--mut);font-siz
 </ul>
 </div></section>
 </main>
-<footer><div class="wrap">© <span id="yr"></span> DerpK. Game artwork belongs to its owners.</div></footer>
+<footer><div class="wrap">© <span id="yr"></span> DerpK. Game artwork belongs to its owners. Site version 2026-11-09.</div></footer>
 <script src="data.js"></script>
 <script src="steam-data.js"></script>
 <script>
 (()=>{
+try{
+if(!window.SITE)throw new Error("data.js did not load");
 const S=window.SITE,ST=window.STEAM||{},q=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const cover=(t,img)=>`<div class="cover" aria-hidden="true">${esc(t.split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase())}${img?`<img src="${esc(img)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div>`;
@@ -207,6 +209,7 @@ const m=q("#menu"),l=q("#links");
 m.onclick=()=>{m.setAttribute("aria-expanded",l.classList.toggle("open"))};
 l.onclick=e=>{if(e.target.tagName==="A"){l.classList.remove("open");m.setAttribute("aria-expanded","false")}};
 q("#yr").textContent=new Date().getFullYear();
+}catch(e){console.error(e);const g=document.getElementById("games");if(g)g.innerHTML=`<p class="meta">The page data failed to load (${e.message}). Make sure data.js is next to index.html and is the latest version, then refresh with Ctrl+F5.</p>`}
 })();
 </script>
 </body>
