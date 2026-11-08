@@ -48,7 +48,6 @@ nav ul a:hover{color:var(--a)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;margin-top:24px}
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px;margin-top:24px;align-items:start}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.card.nda{border-style:dashed}
 .cover{aspect-ratio:16/9;display:grid;place-items:center;background:var(--bg);color:var(--a2);font-size:2rem;font-weight:900;position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
 .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .vbtn{border:0;width:100%;cursor:pointer;padding:0}
@@ -101,7 +100,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--mut);font-siz
 <section id="tested"><div class="wrap">
 <h2>Games I’ve playtested</h2>
 <p class="lead">These are projects I tested as a playtester. Games I just enjoy playing are in the Library.</p>
-<p class="meta" id="nda"></p>
 <div id="filters" role="group" aria-label="Filter by platform"></div>
 <div class="grid" id="games"></div>
 </div></section>
@@ -184,12 +182,12 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--mut);font-siz
 const S=window.SITE,ST=window.STEAM||{},q=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const cover=(t,img)=>`<div class="cover" aria-hidden="true">${esc(t.split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase())}${img?`<img src="${esc(img)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div>`;
-q("#name").textContent=S.name;q("#headline").textContent=S.headline;q("#intro").textContent=S.intro;q("#nda").textContent=S.ndaNote;
+q("#name").textContent=S.name;q("#headline").textContent=S.headline;q("#intro").textContent=S.intro;
 let f="All";
 const gm=q("#games"),fb=q("#filters");
 const draw=()=>{
 fb.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.textContent===f));
-gm.innerHTML=S.games.filter(g=>f==="All"||g.platforms.includes(f)).map(g=>`<article class="card">${cover(g.title,g.image)}<div class="body"><h3>${esc(g.title)}</h3><p class="meta">${[g.platforms.join(" and "),g.genre,g.period,g.status].filter(Boolean).map(esc).join(" | ")}</p>${g.note?`<p class="meta">${esc(g.note)}</p>`:""}${g.description?`<p>${esc(g.description)}</p>`:""}${g.activities?`<p><b>Testing done:</b> ${esc(g.activities)}</p>`:""}${g.findings?`<ul>${g.findings.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}${g.link?`<p><a href="${esc(g.link)}">See the report</a></p>`:""}</div></article>`).join("")+(f==="All"?`<article class="card nda"><div class="cover" aria-hidden="true">NDA</div><div class="body"><h3>More projects under NDA</h3><p class="meta">Details can’t be shared.</p></div></article>`:"");
+gm.innerHTML=S.games.filter(g=>f==="All"||g.platforms.includes(f)).map(g=>`<article class="card">${cover(g.title,g.image)}<div class="body"><h3>${esc(g.title)}</h3><p class="meta">${[g.platforms.join(" and "),g.genre,g.period,g.status].filter(Boolean).map(esc).join(" | ")}</p>${g.note?`<p class="meta">${esc(g.note)}</p>`:""}${g.description?`<p>${esc(g.description)}</p>`:""}${g.activities?`<p><b>Testing done:</b> ${esc(g.activities)}</p>`:""}${g.findings?`<ul>${g.findings.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}${g.link?`<p><a href="${esc(g.link)}">See the report</a></p>`:""}</div></article>`).join("");
 };
 ["All","Android","iOS","PC"].forEach(p=>{const b=document.createElement("button");b.type="button";b.textContent=p;b.onclick=()=>{f=p;draw()};fb.append(b)});
 draw();
