@@ -31,7 +31,7 @@ nav ul{display:flex;gap:24px;list-style:none;margin:0;padding:0}
 nav ul a{color:var(--mut);text-decoration:none}
 nav ul a:hover{color:var(--a)}
 #menu{display:none;background:none;border:1px solid var(--line);color:var(--txt);padding:6px 12px;border-radius:8px;font:inherit}
-.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:44px;align-items:center;padding:76px 0 84px;border:0}
+.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:44px;align-items:center;padding:76px 22px 84px;border:0}
 .hero h1{font-size:clamp(3.4rem,11vw,6.6rem);font-weight:900;letter-spacing:-.045em;margin:0}
 .sub{font-size:1.2rem;font-weight:600;color:var(--a);margin:.2em 0 1em}
 .badges{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 28px;padding:0;list-style:none}
@@ -48,7 +48,6 @@ nav ul a:hover{color:var(--a)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;margin-top:24px}
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px;margin-top:24px;align-items:start}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.card.nda{border-style:dashed}
 .cover{aspect-ratio:16/9;display:grid;place-items:center;background:var(--bg);color:var(--a2);font-size:2rem;font-weight:900;position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
 .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .vbtn{border:0;width:100%;cursor:pointer;padding:0}
@@ -101,9 +100,8 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--mut);font-siz
 <section id="tested"><div class="wrap">
 <h2>Games I’ve playtested</h2>
 <p class="lead">These are projects I tested as a playtester. Games I just enjoy playing are in the Library.</p>
-<p class="meta" id="nda"></p>
 <div id="filters" role="group" aria-label="Filter by platform"></div>
-<div class="grid" id="games"></div>
+<div class="grid" id="games"><p class="meta">The games could not load. Make sure data.js is in the same folder as index.html and is the latest version, then refresh with Ctrl+F5.</p></div>
 </div></section>
 
 <section id="services"><div class="wrap">
@@ -176,20 +174,22 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--mut);font-siz
 </ul>
 </div></section>
 </main>
-<footer><div class="wrap">© <span id="yr"></span> DerpK. Game artwork belongs to its owners.</div></footer>
+<footer><div class="wrap">© <span id="yr"></span> DerpK. Game artwork belongs to its owners. Site version 2026-11-09.</div></footer>
 <script src="data.js"></script>
 <script src="steam-data.js"></script>
 <script>
 (()=>{
+try{
+if(!window.SITE)throw new Error("data.js did not load");
 const S=window.SITE,ST=window.STEAM||{},q=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const cover=(t,img)=>`<div class="cover" aria-hidden="true">${esc(t.split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase())}${img?`<img src="${esc(img)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div>`;
-q("#name").textContent=S.name;q("#headline").textContent=S.headline;q("#intro").textContent=S.intro;q("#nda").textContent=S.ndaNote;
+q("#name").textContent=S.name;q("#headline").textContent=S.headline;q("#intro").textContent=S.intro;
 let f="All";
 const gm=q("#games"),fb=q("#filters");
 const draw=()=>{
 fb.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.textContent===f));
-gm.innerHTML=S.games.filter(g=>f==="All"||g.platforms.includes(f)).map(g=>`<article class="card">${cover(g.title,g.image)}<div class="body"><h3>${esc(g.title)}</h3><p class="meta">${[g.platforms.join(" and "),g.genre,g.period,g.status].filter(Boolean).map(esc).join(" | ")}</p>${g.note?`<p class="meta">${esc(g.note)}</p>`:""}${g.description?`<p>${esc(g.description)}</p>`:""}${g.activities?`<p><b>Testing done:</b> ${esc(g.activities)}</p>`:""}${g.findings?`<ul>${g.findings.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}${g.link?`<p><a href="${esc(g.link)}">See the report</a></p>`:""}</div></article>`).join("")+(f==="All"?`<article class="card nda"><div class="cover" aria-hidden="true">NDA</div><div class="body"><h3>More projects under NDA</h3><p class="meta">Details can’t be shared.</p></div></article>`:"");
+gm.innerHTML=S.games.filter(g=>f==="All"||g.platforms.includes(f)).map(g=>`<article class="card">${cover(g.title,g.image)}<div class="body"><h3>${esc(g.title)}</h3><p class="meta">${[g.platforms.join(" and "),g.genre,g.period,g.status].filter(Boolean).map(esc).join(" | ")}</p>${g.note?`<p class="meta">${esc(g.note)}</p>`:""}${g.description?`<p>${esc(g.description)}</p>`:""}${g.activities?`<p><b>Testing done:</b> ${esc(g.activities)}</p>`:""}${g.findings?`<ul>${g.findings.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}${g.link?`<p><a href="${esc(g.link)}">See the report</a></p>`:""}</div></article>`).join("");
 };
 ["All","Android","iOS","PC"].forEach(p=>{const b=document.createElement("button");b.type="button";b.textContent=p;b.onclick=()=>{f=p;draw()};fb.append(b)});
 draw();
@@ -209,6 +209,7 @@ const m=q("#menu"),l=q("#links");
 m.onclick=()=>{m.setAttribute("aria-expanded",l.classList.toggle("open"))};
 l.onclick=e=>{if(e.target.tagName==="A"){l.classList.remove("open");m.setAttribute("aria-expanded","false")}};
 q("#yr").textContent=new Date().getFullYear();
+}catch(e){console.error(e);const g=document.getElementById("games");if(g)g.innerHTML=`<p class="meta">The page data failed to load (${e.message}). Make sure data.js is next to index.html and is the latest version, then refresh with Ctrl+F5.</p>`}
 })();
 </script>
 </body>
